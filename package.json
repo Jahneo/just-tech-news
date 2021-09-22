@@ -1,0 +1,26 @@
+{
+  "name": "just-tech-news",
+  "version": "1.0.0",
+  "description": "a web server up and running using Sequelize so that we can create database tables",
+  "main": "server.js",
+  "scripts": {
+    "test": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jahneo/just-tech-news.git"
+  },
+  "author": "Neil",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jahneo/just-tech-news/issues"
+  },
+  "homepage": "https://github.com/Jahneo/just-tech-news#readme",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-handlebars": "^5.3.3",
+    "mysql2": "^2.3.0",
+    "sequelize": "^6.6.5"
+  }
+}
