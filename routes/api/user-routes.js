@@ -1,9 +1,8 @@
 const router = require('express').Router();
-const { User } = require('../../models');
+const { User, Post } = require('../../models');
 
-// GET /api/users
+// get all users
 router.get('/', (req, res) => {
-  // Access our User model and run .findAll() method)
   User.findAll({
     attributes: { exclude: ['password'] }
   })
@@ -14,13 +13,18 @@ router.get('/', (req, res) => {
     });
 });
 
-// GET /api/users/1
 router.get('/:id', (req, res) => {
   User.findOne({
     attributes: { exclude: ['password'] },
     where: {
       id: req.params.id
-    }
+    },
+    include: [
+      {
+        model: Post,
+        attributes: ['id', 'title', 'post_url', 'created_at']
+      }
+    ]
   })
     .then(dbUserData => {
       if (!dbUserData) {
@@ -34,7 +38,7 @@ router.get('/:id', (req, res) => {
       res.status(500).json(err);
     });
 });
-// POST /api/users
+
 router.post('/', (req, res) => {
   // expects {username: 'Lernantino', email: 'lernantino@gmail.com', password: 'password1234'}
   User.create({
@@ -48,6 +52,7 @@ router.post('/', (req, res) => {
       res.status(500).json(err);
     });
 });
+
 router.post('/login', (req, res) => {
   // expects {email: 'lernantino@gmail.com', password: 'password1234'}
   User.findOne({
@@ -61,6 +66,7 @@ router.post('/login', (req, res) => {
     }
 
     const validPassword = dbUserData.checkPassword(req.body.password);
+
     if (!validPassword) {
       res.status(400).json({ message: 'Incorrect password!' });
       return;
@@ -69,7 +75,7 @@ router.post('/login', (req, res) => {
     res.json({ user: dbUserData, message: 'You are now logged in!' });
   });
 });
-// PUT /api/users/1
+
 router.put('/:id', (req, res) => {
   // expects {username: 'Lernantino', email: 'lernantino@gmail.com', password: 'password1234'}
 
@@ -85,14 +91,14 @@ router.put('/:id', (req, res) => {
         res.status(404).json({ message: 'No user found with this id' });
         return;
       }
-     // res.json(dbUserData);
+      res.json(dbUserData);
     })
     .catch(err => {
       console.log(err);
       res.status(500).json(err);
     });
 });
-// DELETE /api/users/1
+
 router.delete('/:id', (req, res) => {
   User.destroy({
     where: {
@@ -111,4 +117,5 @@ router.delete('/:id', (req, res) => {
       res.status(500).json(err);
     });
 });
+
 module.exports = router;
